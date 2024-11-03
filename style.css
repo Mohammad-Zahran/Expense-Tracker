@@ -62,3 +62,32 @@ header h5{
     text-transform: uppercase;
 }
 
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+form input, form button{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    height: 42px;
+    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
+}
+
+form button {
+    background-color: var(--main-color);
+    color: #fff;
+}
+
+form div:first-child{
+    flex-basis: 100%;
+}
+
+form div:nth-child(n + 2){
+    flex-basis: calc(50% - 5px);
+}
