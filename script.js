@@ -33,6 +33,9 @@ const formatter = new Intl.NumberFormat('en-US', {
 const list = document.getElementById("transactionList");
 const status = document.getElementById('status');
 const form = document.getElementById('transactionForm');
+const budget = document.getElementById('budget');
+const income = document.getElementById('income');
+const expense = document.getElementById('expense');
 
 form.addEventListener('submit', addTransaction);
 
@@ -50,6 +53,9 @@ function renderList() {
 
     // The for each here is taking the data and creating new elements when fetching them
     transactions.forEach(({ id, name, amount, date, type }) => {
+
+        const sign = 'income' === type ? 1: -1;
+
         const li = document.createElement('li');
 
         li.innerHTML = `
@@ -59,7 +65,7 @@ function renderList() {
         </div>
 
         <div class="amount ${type}">
-           <span>${formatter.format(amount)}</span>
+           <span>${formatter.format(amount * sign)}</span>
         </div>
 
         

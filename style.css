@@ -20,17 +20,69 @@ body {
 h1 {
     text-align: center;
     font-size: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 h3, header, ul {
     margin-bottom: 0.5rem;
 }
 
-main {
-    max-width: 400px;
-    margin: 1rem auto;
+.content-wrapper {
+    display: flex;
+    gap: 1rem; 
+    max-width: 2000px;
+    margin: 0 auto;
 }
 
+/* Main sections for Add Transaction and Transactions */
+.add-transaction {
+    flex: 1;
+    max-width: 45%; /* Width for Add Transaction section */
+}
+
+.transactions {
+    flex: 1;
+    max-width: 55%; /* Width for Transactions section */
+}
+
+main {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* Sidebar styling */
+.sidebar header {
+    background-color: var(--main-color);
+    color: #fff;
+    padding: 1rem;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar header div {
+    padding: 5px;
+}
+
+.sidebar header div:first-child {
+    flex-basis: 100%;
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+.sidebar header div:nth-child(n + 2) {
+    flex-basis: 50%;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.sidebar header h5 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Card styling for both sections */
 .card {
     background-color: #fff;
     padding: 1rem;
@@ -39,38 +91,7 @@ main {
     border-radius: 5px;
 }
 
-header {
-    background-color: var(--main-color);
-    color: #fff;
-    padding: 1rem;
-    text-align: center;
-    border-radius: 5px;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-header div {
-    padding: 5px;
-}
-
-header div:first-child {
-    flex-basis: 100%;
-    font-size: 2.25rem;
-    font-weight: 600;
-}
-
-header div:nth-child(n + 2) {
-    flex-basis: 50%;
-    font-size: 1.25rem;
-    font-weight: 500;
-}
-
-header h5 {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
+/* Form styling */
 form {
     display: flex;
     flex-wrap: wrap;
@@ -134,7 +155,6 @@ input#type {
     z-index: 2;
 }
 
-/* Used AI for the option before and input type checked*/
 .option::before {
     content: '';  
     position: absolute;
@@ -153,6 +173,7 @@ input#type:checked ~ .option::before {
     left: 50%;
 }
 
+/* Transactions List Styling */
 ul {
     list-style-type: none;
 }
@@ -225,4 +246,3 @@ ul li:hover .action {
     text-align: center;
     margin-bottom: 0.5rem;
 }
-
