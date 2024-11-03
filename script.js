@@ -44,6 +44,9 @@ function renderList() {
         status.textContent = 'No transactions.'
         return;
     }
+    else{
+        status.textContent = "";
+    }
 
     // The for each here is taking the data and creating new elements when fetching them
     transactions.forEach(({ id, name, amount, date, type }) => {
@@ -96,6 +99,7 @@ function addTransaction(e){
         name: formData.get("name"),
         amount: parseFloat(formData.get("amount")),
         date: new Date(formData.get('date')),
+        type: "on" === formData.get("type") ? "income" : "expense"
     });
 
     this.reset();
