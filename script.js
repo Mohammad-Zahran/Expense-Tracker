@@ -33,11 +33,29 @@ const formatter = new Intl.NumberFormat('en-US', {
 const list = document.getElementById("transactionList");
 const status = document.getElementById('status');
 const form = document.getElementById('transactionForm');
-const budget = document.getElementById('budget');
+const budget = document.getElementById('balance');
 const income = document.getElementById('income');
 const expense = document.getElementById('expense');
 
 form.addEventListener('submit', addTransaction);
+
+// function calculates the total income, total expenses, and balance, and then formats and updates these values in the respective HTML elements on the page.
+function updateTotal() {
+    const incomeTotal = transactions
+    .filter((trx) => trx.type ==='income')
+    .reduce((total, trx) => total + trx.amount, 0);
+
+    const expenseTotal = transactions
+    .filter((trx) => trx.type ==='expense')
+    .reduce((total, trx) => total + trx.amount, 0);
+
+    const balanceTotal = incomeTotal - expenseTotal;
+
+    balance.textContent = formatter.format(balanceTotal).substring(1);
+    income.textContent = formatter.format(incomeTotal);
+    expense.textContent = formatter.format(expenseTotal * -1);
+
+}
 
 function renderList() {
     list.innerHTML = "";
@@ -84,11 +102,13 @@ function renderList() {
 }
 
 renderList();
+updateTotal();
 
 function deleteTransaction(id) {
     const index = transactions.findIndex((trx) => trx.id === id);
     transactions.splice(index,1);
 
+    updateTotal();
     renderList();
 }
 
@@ -110,6 +130,7 @@ function addTransaction(e){
 
     this.reset();
 
+    updateTotal();
     renderList();
-
 }
+
