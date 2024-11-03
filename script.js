@@ -1,26 +1,4 @@
-const transactions = [
-    {
-        id: 1,
-        name: 'salary',
-        amount: 5000,
-        date: new Date(),
-        type: 'income'
-    },
-    {
-        id: 2,
-        name: 'haircut',
-        amount: 20,
-        date: new Date(),
-        type: 'expense'
-    },
-    {
-        id: 3,
-        name: 'ticket',
-        amount: 350,
-        date: new Date(),
-        type: 'expense'
-    },
-];
+const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 
 // The formatter variable is an instance of Intl.NumberFormat, which is part of JavaScript's Intl (Internationalization) API. It’s used to format numbers as currency, in this case, US dollars. Here’s what each option does:
 
@@ -61,12 +39,10 @@ function renderList() {
     list.innerHTML = "";
 
     // this condition will check if the dummy transaction is empty
+    status.textContent = "";
     if (transactions.length === 0) {
         status.textContent = 'No transactions.'
         return;
-    }
-    else{
-        status.textContent = "";
     }
 
     // The for each here is taking the data and creating new elements when fetching them
@@ -109,6 +85,7 @@ function deleteTransaction(id) {
     transactions.splice(index,1);
 
     updateTotal();
+    saveTransactions();
     renderList();
 }
 
@@ -131,6 +108,11 @@ function addTransaction(e){
     this.reset();
 
     updateTotal();
+    saveTransactions();
     renderList();
 }
 
+function saveTransactions() {
+    transactions.sort((a,b) => new Date(b.date) - new Date(a.date));
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+}
