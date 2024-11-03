@@ -139,6 +139,7 @@ function filterTransactions() {
     renderFilteredList(filteredTransactions);
 }
 
+// Render the filtered transaction list
 function renderFilteredList(filteredTransactions) {
     list.innerHTML = "";
     
