@@ -22,7 +22,7 @@ h1{
     font-size: 1.5rem;
 }
 
-h3, header {
+h3, header, ul {
     margin-bottom: 0.5rem;
 }
 
@@ -106,3 +106,6 @@ form div:nth-child(n + 2){
     flex-basis: calc(50% - 5px);
 }
 
+ul {
+    list-style-type: none;
+}
