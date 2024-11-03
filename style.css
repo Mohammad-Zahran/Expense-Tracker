@@ -257,3 +257,7 @@ ul li:hover .action {
     text-align: center;
     margin-bottom: 0.5rem;
 }
+
+.negative {
+    color: red; /* Change this to any color you prefer */
+}

@@ -1,26 +1,5 @@
-const transactions = [
-    {
-        id: 1,
-        name: 'salary',
-        amount: 5000,
-        date: new Date(),
-        type: 'income'
-    },
-    {
-        id: 2,
-        name: 'haircut',
-        amount: 20,
-        date: new Date(),
-        type: 'expense'
-    },
-    {
-        id: 3,
-        name: 'ticket',
-        amount: 350,
-        date: new Date(),
-        type: 'expense'
-    },
-];
+const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
 
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -53,7 +32,16 @@ function updateTotal() {
 
     const balanceTotal = incomeTotal - expenseTotal;
 
-    balance.textContent = formatter.format(balanceTotal).substring(1);
+    // Format the balance based on whether it's positive or negative
+    balance.textContent = formatter.format(balanceTotal);
+
+    // If balanceTotal is negative, set the text color to red for visibility
+    if (balanceTotal < 0) {
+        balance.classList.add('negative');
+    } else {
+        balance.classList.remove('negative');
+    }
+
     income.textContent = formatter.format(incomeTotal);
     expense.textContent = formatter.format(expenseTotal * -1);
 }
@@ -99,6 +87,7 @@ function deleteTransaction(id) {
     transactions.splice(index, 1);
 
     updateTotal();
+    saveTransactions();
     renderList();
 }
 
@@ -117,6 +106,7 @@ function addTransaction(e) {
 
     this.reset();
     updateTotal();
+    saveTransactions();
     renderList();
 }
 
@@ -137,6 +127,8 @@ function filterTransactions() {
     });
 
     renderFilteredList(filteredTransactions);
+    saveTransactions();
+
 }
 
 // Render the filtered transaction list
@@ -171,3 +163,10 @@ function renderFilteredList(filteredTransactions) {
         list.appendChild(li);
     });
 }
+
+
+function saveTransactions() {
+    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+  }
