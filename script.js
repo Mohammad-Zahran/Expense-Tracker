@@ -20,21 +20,47 @@ const transactions = [
         date: new Date(),
         type: 'expense'
     },
-
 ];
 
+// The formatter variable is an instance of Intl.NumberFormat, which is part of JavaScript's Intl (Internationalization) API. It’s used to format numbers as currency, in this case, US dollars. Here’s what each option does:
+
+const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    signDisplay: 'always',
+})
+
 const list = document.getElementById("transactionList");
+const status = document.getElementById('status');
 
 function renderList() {
-    list.innerHTML = "<li>items</li>";
+    list.innerHTML = "";
 
-    transactions.forEach((transaction) => {
+    // this condition will check if the dummy transaction is empty
+    if(transactions.length === 0){
+        status.textContent = 'No transactions.'
+        return;
+    }
+
+    // The for each here is taking the data and creating new elements when fetching them
+    transactions.forEach(({name, date, amount}) => {
         const li = document.createElement('li');
 
-        li.innerHTML = transaction.amount;
+        li.innerHTML = `
+        <div class="name">
+           <h4>${name}</h4>
+           <p>${new Date(date).toLocaleDateString()}</p>
+        </div>
+
+        <div class="amount">
+           <span>${formatter.format(amount)}</span>
+        </div>
+
+
+        `;
 
         list.appendChild(li)
-    })
+    });
 }
 
 renderList();
