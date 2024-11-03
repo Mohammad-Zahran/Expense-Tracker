@@ -7,7 +7,7 @@
 :root {
     --bg-color: #f6f8fa;
     --text-color: #1d1f27;
-    --main-color: rgb(3, 254, 3);
+    --main-color: rgb(8, 197, 8);
 }
 
 body {
@@ -25,6 +25,16 @@ h1 {
 
 h3, header, ul {
     margin-bottom: 0.5rem;
+}
+
+
+.budget-content{
+    display: flex;
+    justify-content: space-around;
+}
+
+.budget-content > h5{
+    font-weight: 900;
 }
 
 .content-wrapper {
@@ -66,8 +76,11 @@ main {
 
 .sidebar header div:first-child {
     flex-basis: 100%;
-    font-size: 1.75rem;
     font-weight: 600;
+}
+
+#bs {
+    font-size: 1.75rem;
 }
 
 .sidebar header div:nth-child(n + 2) {
@@ -82,7 +95,6 @@ main {
     text-transform: uppercase;
 }
 
-/* Card styling for both sections */
 .card {
     background-color: #fff;
     padding: 1rem;
@@ -91,7 +103,6 @@ main {
     border-radius: 5px;
 }
 
-/* Form styling */
 form {
     display: flex;
     flex-wrap: wrap;
