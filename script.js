@@ -32,6 +32,9 @@ const formatter = new Intl.NumberFormat('en-US', {
 
 const list = document.getElementById("transactionList");
 const status = document.getElementById('status');
+const form = document.getElementById('transactionForm');
+
+form.addEventListener('submit', addTransaction);
 
 function renderList() {
     list.innerHTML = "";
@@ -78,4 +81,25 @@ function deleteTransaction(id) {
     transactions.splice(index,1);
 
     renderList();
+}
+
+// This function will make the user add the new data and submit it without reloading the page
+function addTransaction(e){
+    // I used e.preventDefault() to not reload the page when pressing the submit
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    // This will push the new transaction
+    transactions.push({
+        id: transactions.length + 1,
+        name: formData.get("name"),
+        amount: parseFloat(formData.get("amount")),
+        date: new Date(formData.get('date')),
+    });
+
+    this.reset();
+
+    renderList();
+
 }
