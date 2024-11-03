@@ -17,31 +17,8 @@
     <h1>Expense Tracker</h1>
 
     <main>
-        <header>
-            <div>
-                <h5>Total Balance</h5>
-                <span id="balance">$0.00</span>
-            </div>
-            <div>
-                <h5>Income</h5>
-                <span id="income">$0.00</span>
-            </div>
-            <div>
-                <h5>Expense</h5>
-                <span id="expense">$0.00</span>
-            </div>
-        </header>
-
-        <section>
-            <h3>Transactions</h3>
-            <ul id="transactionList"></ul>
-            <div id="status"></div>
-        </section>
-
-        <!--Transaction Section-->
-        <section>
+        <div class="card">
             <h3>Add Transaction</h3>
-
             <form id="transactionForm">
                 <div>
                     <label for="name">Note</label>
@@ -57,7 +34,13 @@
                 </div>
                 <button type="submit">Submit</button>
             </form>
-        </section>
+        </div>
+
+        <div class="card">
+            <h3>Transactions</h3>
+            <ul id="transactionList"></ul>
+            <div id="status"></div>
+        </div>
     </main>
     <script src="script.js"></script>
 

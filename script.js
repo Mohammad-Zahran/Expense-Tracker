@@ -43,7 +43,7 @@ function renderList() {
     }
 
     // The for each here is taking the data and creating new elements when fetching them
-    transactions.forEach(({name, date, amount}) => {
+    transactions.forEach(({id, name, amount, date, type }) => {
         const li = document.createElement('li');
 
         li.innerHTML = `
@@ -52,7 +52,7 @@ function renderList() {
            <p>${new Date(date).toLocaleDateString()}</p>
         </div>
 
-        <div class="amount">
+        <div class="amount ${type}">
            <span>${formatter.format(amount)}</span>
         </div>
 

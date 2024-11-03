@@ -17,7 +17,7 @@ body {
     color: var(--text-color);
 }
 
-h1{
+h1 {
     text-align: center;
     font-size: 1.5rem;
 }
@@ -26,12 +26,17 @@ h3, header, ul {
     margin-bottom: 0.5rem;
 }
 
-main{
+main {
     max-width: 400px;
     margin: 1rem auto;
+}
+
+.card {
     background-color: #fff;
     padding: 1rem;
+    margin-bottom: 1rem;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
 }
 
 header {
@@ -44,23 +49,23 @@ header {
     flex-wrap: wrap;
 }
 
-header div{
+header div {
     padding: 5px;
 }
 
 header div:first-child {
     flex-basis: 100%;
-    font-size: 2.25 rem;
+    font-size: 2.25rem;
     font-weight: 600;
 }
 
 header div:nth-child(n + 2) {
-    flex-basis: 50% ;
+    flex-basis: 50%;
     font-size: 1.25rem;
     font-weight: 500;
 }
 
-header h5{
+header h5 {
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -72,7 +77,8 @@ form {
     gap: 10px;
 }
 
-form input, form button{
+form input,
+form button {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -98,16 +104,51 @@ form label {
     text-transform: uppercase;
 }
 
-form div:first-child{
+form div:first-child {
     flex-basis: 100%;
 }
 
-form div:nth-child(n + 2){
+form div:nth-child(n + 2) {
     flex-basis: calc(50% - 5px);
 }
 
 ul {
     list-style-type: none;
+}
+
+ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 5px 10px;
+    position: relative;
+}
+
+.name {
+    flex: 1;
+}
+
+.name h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.name p {
+    font-size: 0.8rem;
+    color: #555;
+}
+
+.amount {
+    font-weight: 600;
+}
+
+.amount.income {
+    color: yellowgreen;
+}
+
+.amount.expense {
+    color: indianred;
 }
 
 #status {
