@@ -1,7 +1,6 @@
 <?php
-
 if (isset($_POST['uname']) && isset($_POST['password'])) {
-    function validate($data){
+    function validate($data) {
         $data = trim($data);
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
@@ -11,24 +10,20 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
     $uname = validate($_POST['uname']);
     $pass = validate($_POST['password']);
 
+    // Check if fields are empty and respond with errors
     if (empty($uname)) {
-        header("Location: login.html?error=User Name is required");
+        echo 'User Name is required';
         exit();
     }
-    else if (empty($pass)) {
-        header("Location: login.html?error=Password is required");
-        exit();
-    } 
-    else {
-        header("Location: index.html");
+    if (empty($pass)) {
+        echo 'Password is required';
         exit();
     }
+
+    // If credentials are valid, return a success URL
+    echo 'index.html';
+    exit();
 } else {
-    header("Location: login.html");
+    echo 'Invalid submission';
     exit();
 }
-
-if ($isset($_GET['error'])){
-    
-}
-?>
