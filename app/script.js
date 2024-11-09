@@ -1,65 +1,108 @@
-const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-
-
-const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    signDisplay: 'always',
-});
+let transactions = [];
 
 const list = document.getElementById("transactionList");
-const status = document.getElementById('status');
-const form = document.getElementById('transactionForm');
-const balance = document.getElementById('balance');
-const income = document.getElementById('income');
-const expense = document.getElementById('expense');
-const filterForm = document.getElementById('filterForm');
+const status = document.getElementById("status");
+const form = document.getElementById("transactionForm");
+const balance = document.getElementById("balance");
+const income = document.getElementById("income");
+const expense = document.getElementById("expense");
 
-form.addEventListener('submit', addTransaction);
-filterForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    filterTransactions();
-});
+// Get the user ID from localStorage
+const userId = localStorage.getItem("userId");
 
-function updateTotal() {
-    const incomeTotal = transactions
-        .filter((trx) => trx.type === 'income')
-        .reduce((total, trx) => total + trx.amount, 0);
+if (!userId) {
+    // If no user_id is found in localStorage, redirect to login page
+    window.location.href = "login.html";
+} else {
+    document.addEventListener("DOMContentLoaded", fetchTransactions);
+}
 
-    const expenseTotal = transactions
-        .filter((trx) => trx.type === 'expense')
-        .reduce((total, trx) => total + trx.amount, 0);
-
-    const balanceTotal = incomeTotal - expenseTotal;
-
-    // Format the balance based on whether it's positive or negative
-    balance.textContent = formatter.format(balanceTotal);
-
-    // If balanceTotal is negative, set the text color to red for visibility
-    if (balanceTotal < 0) {
-        balance.classList.add('negative');
-    } else {
-        balance.classList.remove('negative');
+// Fetch transactions from the server using the user ID
+async function fetchTransactions() {
+    try {
+        // Send the GET request with the user ID as a query parameter
+        const response = await axios.get(`http://localhost/Expense%20Tracker/server/getTransactions.php?user_id=${userId}`);
+        
+        // Check if the response has a successful structure and contains transactions
+        if (response.data && response.data.status === 'success' && Array.isArray(response.data.transactions)) {
+            transactions = response.data.transactions;  // Extract transactions array
+            renderList();
+            updateTotal();
+            status.textContent = "";  // Clear any previous status message
+        } else {
+            console.error("Unexpected response format:", response.data);
+            status.textContent = response.data.message || "Error fetching transactions.";
+            transactions = [];  // Set an empty array to avoid further errors
+            renderList();
+            updateTotal();
+        }
+    } catch (error) {
+        console.error("Error fetching transactions:", error);
+        status.textContent = "Failed to load transactions.";
+        transactions = [];  // Set an empty array to avoid further errors
+        renderList();
+        updateTotal();
     }
-
-    income.textContent = formatter.format(incomeTotal);
-    expense.textContent = formatter.format(expenseTotal * -1);
 }
 
 
+// Add a new transaction
+form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const transactionData = {
+        user_id: userId, 
+        name: formData.get("name"),
+        amount: parseFloat(formData.get("amount")),
+        date: formData.get("date"),
+        type: formData.get("type") ? "income" : "expense"
+    };
+
+    try {
+        const response = await axios.post("http://localhost/Expense%20Tracker/server/addTransactions.php", transactionData);
+        if (response.data.success) {
+            transactions.push(response.data.transaction);
+            renderList();
+            updateTotal();
+            form.reset();
+        } else {
+            status.textContent = "Error adding transaction.";
+        }
+    } catch (error) {
+        console.error("Error adding transaction:", error);
+        status.textContent = "Failed to add transaction.";
+    }
+});
+
+// Delete a transaction
+async function deleteTransaction(id) {
+    try {
+        const response = await axios.post("http://localhost/Expense%20Tracker/server/deleteTransactions.php", { id });
+        if (response.data.success) {
+            transactions = transactions.filter(trx => trx.id !== id);
+            renderList();
+            updateTotal();
+        } else {
+            status.textContent = "Error deleting transaction.";
+        }
+    } catch (error) {
+        console.error("Error deleting transaction:", error);
+        status.textContent = "Failed to delete transaction.";
+    }
+}
+
+// Render the transaction list
 function renderList() {
     list.innerHTML = "";
 
     if (transactions.length === 0) {
         status.textContent = 'No transactions.';
         return;
-    } else {
-        status.textContent = "";
     }
 
     transactions.forEach(({ id, name, amount, date, type }) => {
-        const sign = 'income' === type ? 1 : -1;
-
+        const sign = type === 'income' ? 1 : -1;
         const li = document.createElement('li');
         li.innerHTML = `
             <div class="name">
@@ -79,94 +122,27 @@ function renderList() {
     });
 }
 
-renderList();
-updateTotal();
+// Update totals for income, expense, and balance
+function updateTotal() {
+    const incomeTotal = transactions
+        .filter((trx) => trx.type === 'income')
+        .reduce((total, trx) => total + trx.amount, 0);
 
-function deleteTransaction(id) {
-    const index = transactions.findIndex((trx) => trx.id === id);
-    transactions.splice(index, 1);
+    const expenseTotal = transactions
+        .filter((trx) => trx.type === 'expense')
+        .reduce((total, trx) => total + trx.amount, 0);
 
-    updateTotal();
-    saveTransactions();
-    renderList();
+    const balanceTotal = incomeTotal - expenseTotal;
+
+    balance.textContent = formatter.format(balanceTotal);
+    income.textContent = formatter.format(incomeTotal);
+    expense.textContent = formatter.format(expenseTotal * -1);
+
+    balance.classList.toggle('negative', balanceTotal < 0);
 }
 
-function addTransaction(e) {
-    e.preventDefault();
-
-    const formData = new FormData(this);
-
-    transactions.push({
-        id: transactions.length + 1,
-        name: formData.get("name"),
-        amount: parseFloat(formData.get("amount")),
-        date: new Date(formData.get('date')),
-        type: formData.get("type") ? "income" : "expense"
-    });
-
-    this.reset();
-    updateTotal();
-    saveTransactions();
-    renderList();
-}
-
-function filterTransactions() {
-    const minAmount = parseFloat(filterForm.minAmount.value) || 0;
-    const maxAmount = parseFloat(filterForm.maxAmount.value) || Infinity;
-    const type = filterForm.type.value;
-    const date = new Date(filterForm.date.value);
-    const note = filterForm.note.value.toLowerCase();
-
-    const filteredTransactions = transactions.filter(trx => {
-        const matchesAmount = trx.amount >= minAmount && trx.amount <= maxAmount;
-        const matchesType = type ? trx.type === type : true;
-        const matchesDate = date.toString() !== "Invalid Date" ? new Date(trx.date).toDateString() === date.toDateString() : true;
-        const matchesNote = trx.name.toLowerCase().includes(note);
-        
-        return matchesAmount && matchesType && matchesDate && matchesNote;
-    });
-
-    renderFilteredList(filteredTransactions);
-    saveTransactions();
-
-}
-
-// Render the filtered transaction list
-function renderFilteredList(filteredTransactions) {
-    list.innerHTML = "";
-    
-    if (filteredTransactions.length === 0) {
-        status.textContent = 'No transactions match the filter criteria.';
-        return;
-    } else {
-        status.textContent = "";
-    }
-
-    filteredTransactions.forEach(({ id, name, amount, date, type }) => {
-        const sign = 'income' === type ? 1 : -1;
-
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <div class="name">
-                <h4>${name}</h4>
-                <p>${new Date(date).toLocaleDateString()}</p>
-            </div>
-            <div class="amount ${type}">
-                <span>${formatter.format(amount * sign)}</span>
-            </div>
-            <div class="action">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" onclick="deleteTransaction(${id})">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-            </div>
-            `;
-        list.appendChild(li);
-    });
-}
-
-
-function saveTransactions() {
-    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-  
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-  }
+const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    signDisplay: 'always',
+});

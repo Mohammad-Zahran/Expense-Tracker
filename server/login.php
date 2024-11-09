@@ -13,15 +13,16 @@ $result = $query->get_result();
 if ($result->num_rows != 0) {
     $user = $result->fetch_assoc();
 
+    // Verify password
     $check = password_verify($password, $user["password"]);
 
     if ($check) {
+        // Send user data including user ID
         echo json_encode([
             "status" => "Login Succesful",
-            "user" => $user,
+            "user_id" => $user["id"], 
         ]);
-    }
-    else {
+    } else {
         echo json_encode([
             "status" => "Invalid Credentials",
         ]);
