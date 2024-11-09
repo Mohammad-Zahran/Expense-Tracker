@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register</title>
     <link rel="stylesheet" href="./styles/style.css">
 </head>
 <body>
     <main>
-        <div class="login-container">
-            <h1>Login</h1>
+        <div class="register-container">
+            <h1>Register</h1>
 
             <div id="error-container" class="error"></div>
 
-            <!-- Remove action and method as Axios will handle the request -->
-            <form id="login-form">
+            <form id="register-form">
                 <div class="input-group">
                     <label for="username">User Name</label>
                     <input type="text" id="username" name="username" placeholder="Enter your username">
@@ -25,18 +24,17 @@
                     <input type="password" id="password" name="password" placeholder="Enter your password">
                 </div>
 
-                <button id="login" type="submit">LOGIN</button>
+                
+
+                <button id="register" type="submit">REGISTER</button>
             </form>
 
-            <!-- Register link -->
-            <div class="register-link">
-                <p>Don't have an account? <a href="register.html">Register here</a></p>
+            <div class="login-link">
+                <p>Already have an account? <a href="index.html">Login here</a></p>
             </div>
         </div>
     </main>
 
-    <!-- Include Axios and the JavaScript file after the HTML for faster page load -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="login.js"></script>
+    <script src="register.js"></script>
 </body>
 </html>
