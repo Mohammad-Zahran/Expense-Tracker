@@ -18,8 +18,8 @@ LoginButton.addEventListener("click", async (event) => {
         });
 
         console.log(response.data);
-        if (response.data.status === "Login Successful") {
-            window.location.href = "/index.html"
+        if (response.data.status === "Login Succesful") {
+            window.location.href = "home.html";
         } else {
             document.getElementById("error-container").innerText = "Invalid credentials, please try again.";
         }
