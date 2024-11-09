@@ -27,8 +27,10 @@ if (isset($_POST["user_id"]) && isset($_POST["name"]) && isset($_POST["amount"])
     $query = $connection->prepare("INSERT INTO transactions (user_id, name, amount, date, type) VALUES (?, ?, ?, ?, ?)");
 
    
-    $query->bind_param("issds", $user_id, $name, $amount, $date, $type);
+    $query->bind_param("issss", $user_id, $name, $amount, $date, $type);
 
+
+    // Execute the query
     if ($query->execute()) {
         echo json_encode([
             "status" => "success",
