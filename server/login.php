@@ -1,43 +1,32 @@
 <?php
 include "connection.php";
 
-if (isset($_POST['uname']) && isset($_POST['password'])) {
-    function validate($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
+$username = $_POST["username"];
+$password = $_POST["password"];
 
-    $uname = validate($_POST['uname']);
-    $password = validate($_POST['password']);
+$query = $connection->prepare("SELECT * FROM users WHERE username = ?");
+$query->bind_param("s", $username);
+$query->execute();
+$result = $query->get_result();
 
-    if (empty($uname)) {
-        echo 'User Name is required';
-        exit();
-    }
-    else if (empty($password)) {
-        echo 'Password is required';
-        exit();
+if ($result->num_rows != 0) {
+    $user = $result->fetch_assoc();
+
+    $check = password_verify($password, $user["password"]);
+
+    if ($check) {
+        echo json_encode([
+            "status" => "Login Succesful",
+            "user" => $user,
+        ]);
     }
     else {
-        $sql = "SELECT * FROM users WHERE username='$uname' AND password='$password'";
-
-        // Use the correct connection variable
-        $result = mysqli_query($connection, $sql);
-
-        // Use the correct function to check the number of rows
-        if (mysqli_num_rows($result) > 0) {
-            // Redirect to index.html after successful login
-            header("Location: index.html");
-            exit();
-        } else {
-            echo 'Invalid credentials';
-            exit();
-        }
+        echo json_encode([
+            "status" => "Invalid Credentials",
+        ]);
     }
 } else {
-    echo 'Invalid submission';
-    exit();
+    echo json_encode([
+        "status" => "Invalid Credentials",
+    ]);
 }
-?>
