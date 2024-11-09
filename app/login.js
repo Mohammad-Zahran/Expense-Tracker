@@ -1,48 +1,30 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('form');
-    const errorContainer = document.getElementById('error-container');
+const LoginButton = document.getElementById("login");
+const usernameInput = document.getElementById("username");
+const passwordInput = document.getElementById("password");
 
-    form.addEventListener('submit', function (event) {
-        event.preventDefault(); 
+LoginButton.addEventListener("click", async (event) => {
+    event.preventDefault(); 
 
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
+    const data = new FormData();
 
-        errorContainer.textContent = '';
-        errorContainer.style.display = 'none';
+    data.append("username",usernameInput.value);
+    data.append("password",passwordInput.value);
 
-        if (!username) {
-            errorContainer.textContent = 'User Name is required';
-            errorContainer.style.display = 'block'; 
-            return;
-        }
-        
-        if (!password) {
-            errorContainer.textContent = 'Password is required';
-            errorContainer.style.display = 'block'; 
-            return;
-        }
-
-        fetch('login.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `uname=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
-        })
-        .then(response => response.text())
-        .then(data => {
-            if (data.includes('index.html')) {
-                window.location.href = 'index.html';
-            } else {
-                errorContainer.textContent = data;
-                errorContainer.style.display = 'block'; 
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            errorContainer.textContent = 'An error occurred. Please try again.';
-            errorContainer.style.display = 'block'; 
+    try {
+        // Send the POST request using Axios
+        const response = await axios("http://localhost/Expense%20Tracker/server/login.php", {
+            method: "POST",
+            data:data,
         });
-    });
+
+        console.log(response.data);
+        if (response.data.status === "Login Successful") {
+            window.location.href = "/index.html"
+        } else {
+            document.getElementById("error-container").innerText = "Invalid credentials, please try again.";
+        }
+    } catch (error) {
+        console.error("An error occurred:", error);
+        document.getElementById("error-container").innerText = "Failed to reach the server.";
+    }
 });

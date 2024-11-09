@@ -22,3 +22,5 @@ if ($result != 0) {
         "message" => "Could not create record",
     ]);
 }
+
+?>

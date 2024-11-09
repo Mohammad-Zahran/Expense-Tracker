@@ -1,4 +1,9 @@
 <?php
+
+header("Access-Control-Allow-Origin:*");
+header("Access-Control-Allow-Headers:Content-Type");
+header("Access-Control-Allow-Methods:POST, GET");
+
 include "connection.php";
 
 $username = $_POST["username"];
@@ -30,3 +35,5 @@ if ($result->num_rows != 0) {
         "status" => "Invalid Credentials",
     ]);
 }
+
+?>
