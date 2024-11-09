@@ -7,11 +7,9 @@ const balance = document.getElementById("balance");
 const income = document.getElementById("income");
 const expense = document.getElementById("expense");
 
-// Get the user ID from localStorage
 const userId = localStorage.getItem("userId");
 
 if (!userId) {
-    // If no user_id is found in localStorage, redirect to login page
     window.location.href = "login.html";
 } else {
     document.addEventListener("DOMContentLoaded", fetchTransactions);
@@ -75,14 +73,15 @@ form.addEventListener('submit', async function(e) {
     }
 });
 
-// Delete a transaction
+// Delete a transaction by ID
 async function deleteTransaction(id) {
     try {
-        const response = await axios.post("http://localhost/Expense%20Tracker/server/deleteTransactions.php", { id });
-        if (response.data.success) {
+        const response = await axios.get(`http://localhost/Expense%20Tracker/server/deleteTransactions.php?id=${id}`);
+
+        if (response.data.status === 'success') {
             transactions = transactions.filter(trx => trx.id !== id);
-            renderList();
-            updateTotal();
+            renderList();  
+            updateTotal();  
         } else {
             status.textContent = "Error deleting transaction.";
         }
@@ -122,7 +121,6 @@ function renderList() {
     });
 }
 
-// Update totals for income, expense, and balance
 function updateTotal() {
     const incomeTotal = transactions
         .filter((trx) => trx.type === 'income')
