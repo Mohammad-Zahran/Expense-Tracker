@@ -36,13 +36,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.location.href = 'index.html';
             } else {
                 errorContainer.textContent = data;
-                errorContainer.style.display = 'block'; // Show error container
+                errorContainer.style.display = 'block'; 
             }
         })
         .catch(error => {
             console.error('Error:', error);
             errorContainer.textContent = 'An error occurred. Please try again.';
-            errorContainer.style.display = 'block'; // Show error container
+            errorContainer.style.display = 'block'; 
         });
     });
 });

@@ -1,9 +1,9 @@
 <?php
 
 $host = "localhost";
-$dbuser = "root";   // Default MySQL user for XAMPP
-$pass = "";         // Default password for XAMPP MySQL is usually empty
-$dbname = "expensedb"; // Ensure this matches the database name
+$dbuser = "root";   
+$pass = "";        
+$dbname = "expensedb"; 
 
 $connection = new mysqli($host, $dbuser, $pass, $dbname);
 
