@@ -22,7 +22,7 @@ LoginButton.addEventListener("click", async (event) => {
         if (response.data.status === "Login Succesful") {
             // Store user ID in localStorage
             const userId = response.data.user_id;
-            localStorage.setItem("userId", userId); // Store user ID for future requests
+            localStorage.setItem("userId", userId); 
 
             // Redirect to home page
             window.location.href = "home.html";

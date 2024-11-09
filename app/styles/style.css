@@ -451,3 +451,45 @@ button:hover {
 .login-link a:hover {
     text-decoration: underline;
 }
+
+/* Styling for radio button options */
+form div label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #eee;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+form div label input[type="radio"] {
+    display: none; 
+}
+
+form div label:hover {
+    background-color: #ddd; /* Hover background */
+}
+
+form div label input[type="radio"]:checked + label {
+    background-color: var(--main-color);
+    color: white;
+    border-color: var(--main-color);
+}
+
+form div label input[type="radio"]:checked + label:hover {
+    background-color: darkgreen;
+}
+
+/* Active effect for selected option */
+form div label:has(input[type="radio"]:checked) {
+    background-color: var(--main-color);
+    color: white;
+    border-color: var(--main-color);
+}

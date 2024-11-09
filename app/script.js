@@ -15,85 +15,41 @@ if (!userId) {
     document.addEventListener("DOMContentLoaded", fetchTransactions);
 }
 
-// Fetch transactions from the server using the user ID
 async function fetchTransactions() {
     try {
-        // Send the GET request with the user ID as a query parameter
         const response = await axios.get(`http://localhost/Expense%20Tracker/server/getTransactions.php?user_id=${userId}`);
         
-        // Check if the response has a successful structure and contains transactions
+        console.log('Fetch Response:', response.data); // Debug: Log response data
+
         if (response.data && response.data.status === 'success' && Array.isArray(response.data.transactions)) {
-            transactions = response.data.transactions;  // Extract transactions array
+            transactions = response.data.transactions;  
             renderList();
             updateTotal();
-            status.textContent = "";  // Clear any previous status message
+            status.textContent = "";  
+        } else if (response.data.status === 'no_transactions') {
+            transactions = [];
+            renderList();
+            updateTotal();
+            status.textContent = response.data.message; 
         } else {
             console.error("Unexpected response format:", response.data);
             status.textContent = response.data.message || "Error fetching transactions.";
-            transactions = [];  // Set an empty array to avoid further errors
+            transactions = []; 
             renderList();
             updateTotal();
         }
     } catch (error) {
         console.error("Error fetching transactions:", error);
         status.textContent = "Failed to load transactions.";
-        transactions = [];  // Set an empty array to avoid further errors
+        transactions = [];  
         renderList();
         updateTotal();
     }
 }
 
-
-// Add a new transaction
-form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const formData = new FormData(form);
-    const transactionData = {
-        user_id: userId, 
-        name: formData.get("name"),
-        amount: parseFloat(formData.get("amount")),
-        date: formData.get("date"),
-        type: formData.get("type") ? "income" : "expense"
-    };
-
-    try {
-        const response = await axios.post("http://localhost/Expense%20Tracker/server/addTransactions.php", transactionData);
-        if (response.data.success) {
-            transactions.push(response.data.transaction);
-            renderList();
-            updateTotal();
-            form.reset();
-        } else {
-            status.textContent = "Error adding transaction.";
-        }
-    } catch (error) {
-        console.error("Error adding transaction:", error);
-        status.textContent = "Failed to add transaction.";
-    }
-});
-
-// Delete a transaction by ID
-async function deleteTransaction(id) {
-    try {
-        const response = await axios.get(`http://localhost/Expense%20Tracker/server/deleteTransactions.php?id=${id}`);
-
-        if (response.data.status === 'success') {
-            transactions = transactions.filter(trx => trx.id !== id);
-            renderList();  
-            updateTotal();  
-        } else {
-            status.textContent = "Error deleting transaction.";
-        }
-    } catch (error) {
-        console.error("Error deleting transaction:", error);
-        status.textContent = "Failed to delete transaction.";
-    }
-}
-
-// Render the transaction list
 function renderList() {
     list.innerHTML = "";
+
 
     if (transactions.length === 0) {
         status.textContent = 'No transactions.';
@@ -101,6 +57,11 @@ function renderList() {
     }
 
     transactions.forEach(({ id, name, amount, date, type }) => {
+        if (typeof id !== 'number') {
+            console.error('Invalid ID:', id); // Debug: Log invalid ID
+            return;
+        }
+
         const sign = type === 'income' ? 1 : -1;
         const li = document.createElement('li');
         li.innerHTML = `
@@ -119,6 +80,62 @@ function renderList() {
         `;
         list.appendChild(li);
     });
+}
+
+form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const userId = localStorage.getItem("userId"); 
+
+    const transactionData = {
+        user_id: userId,
+        name: form.name.value,
+        amount: parseFloat(form.amount.value),
+        date: form.date.value,
+        type: form.type.value
+    };
+
+
+    try {
+        const response = await axios.post("http://localhost/Expense%20Tracker/server/addTransactions.php", transactionData, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.data.status === 'success') {
+            transactions.push({
+                id: response.data.id,
+                ...transactionData
+            });
+            renderList();
+            updateTotal();
+            form.reset();
+        } else {
+            status.textContent = response.data.message || "Error adding transaction.";
+        }
+    } catch (error) {
+        console.error("Error adding transaction:", error);
+        status.textContent = "Failed to add transaction.";
+    }
+});
+
+
+async function deleteTransaction(id) {
+    try {
+        const response = await axios.get(`http://localhost/Expense%20Tracker/server/deleteTransactions.php?id=${id}`);
+
+        if (response.data.status === 'success') {
+            transactions = transactions.filter(trx => trx.id !== id);
+            renderList();  
+            updateTotal();  
+        } else {
+            status.textContent = "Error deleting transaction.";
+        }
+    } catch (error) {
+        console.error("Error deleting transaction:", error);
+        status.textContent = "Failed to delete transaction.";
+    }
 }
 
 function updateTotal() {
@@ -144,3 +161,4 @@ const formatter = new Intl.NumberFormat('en-US', {
     currency: 'USD',
     signDisplay: 'always',
 });
+

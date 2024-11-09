@@ -17,7 +17,6 @@ if ($result->num_rows != 0) {
     $check = password_verify($password, $user["password"]);
 
     if ($check) {
-        // Send user data including user ID
         echo json_encode([
             "status" => "Login Succesful",
             "user_id" => $user["id"], 

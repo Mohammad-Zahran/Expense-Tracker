@@ -3,8 +3,7 @@ const usernameInput = document.getElementById("username");
 const passwordInput = document.getElementById("password");
 
 RegisterButton.addEventListener("click", async (event) => {
-    event.preventDefault(); // Prevent the default form submission
-
+    event.preventDefault(); 
     const data = new FormData();
     data.append("username", usernameInput.value);
     data.append("password", passwordInput.value);
@@ -17,9 +16,9 @@ RegisterButton.addEventListener("click", async (event) => {
 
         console.log(response.data);
         if (response.data.status === "Successful") {
-            window.location.href = "index.html"; // Redirect to login page after successful registration
+            window.location.href = "index.html"; 
         } else {
-            document.getElementById("error-container").innerText = response.data.message; // Display error message
+            document.getElementById("error-container").innerText = response.data.message; 
         }
     } catch (error) {
         console.error("An error occurred:", error);
